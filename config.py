@@ -4,7 +4,7 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 class BaseConf(object):
     ORIGINS = ["*"]
-    SECRET_KEY = "\xa88*k$9^,\x910\x87\x1e@\x1eb\t\xcd\x1b\xa3\xdb\xd7(2\xf6"
+    SECRET_KEY = "\xaf\x07q\xd6o\x1e/jph\xa6\xdb\xaa}\xb9\xeay\xd5\xc8\x05\xdf\xaa#\x82"
     SQLALCHEMY_DATABASE_URI = "sqlite:////" + os.path.join(BASE_DIR, "app.db")
 
 class DevelopmentConf(BaseConf):
@@ -12,7 +12,7 @@ class DevelopmentConf(BaseConf):
     PORT = 5000
     DEBUG = True
     TESTING = False
-    ENV = 'development'
+    ENV = "development"
     APPNAME = "quizDev"
 
 class ProductionConf(BaseConf):
@@ -20,7 +20,7 @@ class ProductionConf(BaseConf):
     PORT = 8080
     DEBUG = False
     TESTING = False
-    ENV = 'production'
+    ENV = "production"
     APPNAME = "quizProd"
 
     

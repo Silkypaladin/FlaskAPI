@@ -3,17 +3,41 @@ import uuid
 from flask import request, jsonify
 from ..extensions.security import *
 from ..extensions.database import db
-from ..models.users import User
+from ..models.users import User, Admin
 
 user = Blueprint('user', __name__)
 
 @user.route('/user', methods=['GET'])
 def get_all_users():
-    return 'All users'
+    users = User.query.all()
+    output = []
 
-@user.route('/user/<user_id>', methods=['GET'])
-def get_user():
-    return 'Single user with id'
+    for user in users:
+        user_data = {}
+        user_data['public_id'] = user.public_id
+        user_data['email'] = user.email
+        user_data['password'] = user.password
+        user_data['nickname'] = user.nickname
+        user_data['active'] = user.active
+        user_data['date_created'] = user.date_created
+        output.append(user_data)
+    return jsonify(output)
+
+@user.route('/user/<public_id>', methods=['GET'])
+def get_user(public_id):
+    user = User.query.filter_by(public_id=public_id).first()
+
+    if not user:
+        return jsonify({'message' : 'No user found.'})
+    user_data = {}
+    user_data['public_id'] = user.public_id
+    user_data['email'] = user.email
+    user_data['password'] = user.password
+    user_data['nickname'] = user.nickname
+    user_data['active'] = user.active
+    user_data['date_created'] = user.date_created
+
+    return user_data
 
 @user.route('/user', methods=['POST'])
 def create_user():
@@ -26,12 +50,17 @@ def create_user():
 
 @user.route('/admin', methods=['POST'])
 def create_admin():
+    data = request.get_json()
+    hashed_pass = hash_password(data['password'], 'sha256')
+    new_admin = Admin(str(uuid.uuid4()), hashed_pass, data['nickname'])
+    db.session.add(new_admin)
+    db.session.commit()
     return 'Admin created'
 
-@user.route('/user/<user_id>', methods=['DELETE'])
-def delete_user():
+@user.route('/user/<public_id>', methods=['DELETE'])
+def delete_user(public_id):
     return 'User deleted'
 
-@user.route('/admin/<admin_id>', methods=['DELETE'])
-def delete_admin():
+@user.route('/admin/<public_id>', methods=['DELETE'])
+def delete_admin(public_id):
     return ''
