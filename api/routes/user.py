@@ -52,7 +52,7 @@ def get_single_user(current_user, public_id):
 @token_required
 def create_user(current_user):
     if not current_user.is_admin:
-        return jsonify({'message' : 'Cannot perform that action!'})
+       return jsonify({'message' : 'Cannot perform that action!'})
 
     data = request.get_json()
     hashed_pass = generate_password_hash(data['password'], method='sha256')
