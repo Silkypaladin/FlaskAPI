@@ -2,6 +2,7 @@ from flask import Flask, Blueprint
 import os
 from .routes.user import user
 from .routes.login import login
+from .routes.quiz import quiz
 from .extensions.database import db
 from .models import User
 
@@ -14,5 +15,7 @@ def create_app(config):
         db.session.commit()
     app.register_blueprint(user)
     app.register_blueprint(login)
+    app.register_blueprint(quiz)
+
 
     return app

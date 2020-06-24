@@ -1,2 +1,2 @@
 # Quizly
-A website similar to apps like Kahoot, written as an intro to REST APIs and web development in general. Work in progress.
+An API written in Flask, made as a backend for a quiz website.
