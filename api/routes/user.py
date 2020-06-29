@@ -59,7 +59,7 @@ def create_user(current_user):
     new_user = User(str(uuid.uuid4()), data['email'], hashed_pass, data['nickname'])
     db.session.add(new_user)
     db.session.commit()
-    return 'User created'
+    return jsonify({'message' : 'User created'})
 
 @user.route('/api/user/<public_id>', methods=['PUT'])
 @token_required

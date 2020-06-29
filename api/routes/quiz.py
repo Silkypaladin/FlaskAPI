@@ -30,8 +30,11 @@ def create_new_quiz(current_user):
     (Quiz.title == data['title'])).count()
     if not title_exists:
         new_quiz = Quiz(data['title'], data['info'], current_user.public_id)
-        db.session.add(new_quiz)
-        db.session.commit()
+        try:
+            db.session.add(new_quiz)
+            db.session.commit()
+        except:
+            return jsonify({'message' : 'Could not add quiz.'})
         return jsonify({'message': 'New quiz added.'})
     return jsonify({'message' : 'Quiz already exists!'})
 
@@ -39,6 +42,8 @@ def create_new_quiz(current_user):
 @token_required
 def get_one_quiz(current_user, quiz_id):
     quiz = Quiz.query.filter_by(id=quiz_id).first()
+    if not quiz:
+        return jsonify({'message' : 'No quiz found.'})
     n_of_questions = Question.query.filter_by(quiz_id=quiz.id).count()
     quiz_data = {}
     quiz_data['id'] = quiz.id
@@ -47,3 +52,13 @@ def get_one_quiz(current_user, quiz_id):
     quiz_data['user_id'] = quiz.user_id
     quiz_data['number_of_questions'] = n_of_questions
     return jsonify(quiz_data)
+
+@quiz.route('/api/quizzes/<quiz_id>', methods=['DELETE'])
+@token_required
+def delete_quiz(current_user, quiz_id):
+    quiz = Quiz.query.filter_by(id=quiz_id).first()
+    if not quiz:
+        return jsonify({'message' : 'No quiz found.'})
+    db.session.delete(quiz)
+    db.session.commit()
+    return jsonify({'message' : 'Quiz deleted.'})
