@@ -27,7 +27,7 @@ class Quiz(db.Model):
   title = db.Column(db.String(50))
   info = db.Column(db.String(200))
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-  questions = db.relationship('Question', backref='quiz', lazy=True)
+  questions = db.relationship('Question', cascade="all,delete", backref='quiz', lazy=True)
 
   def __init__(self, title, info, user_id):
     self.title = title
@@ -46,6 +46,15 @@ class Question(db.Model):
    ans_four = db.Column(db.String(200))
    correct = db.Column(db.Integer,nullable=False)
    quiz_id = db.Column(db.Integer, db.ForeignKey('quizzes.id'), nullable=False)
+
+   def __init__(self, question, ans_one, ans_two, ans_three, ans_four, correct, quiz_id):
+     self.question = question
+     self.ans_one = ans_one
+     self.ans_two = ans_two
+     self.ans_three = ans_three
+     self.ans_four = ans_four
+     self.correct = correct
+     self.quiz_id = quiz_id
    
    
    
