@@ -23,4 +23,12 @@ class ProductionConf(BaseConf):
     ENV = "production"
     APPNAME = "quizProd"
 
+class TestConf(BaseConf):
+    SQLALCHEMY_DATABASE_URI = "sqlite:////" + os.path.join(BASE_DIR, "test_app.db")
+    PORT = 6000
+    DEBUG = True
+    TESTING = True
+    ENV = "testing"
+    APPNAME = "quizTest"
+
     
