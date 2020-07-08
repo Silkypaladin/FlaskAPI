@@ -20,7 +20,7 @@ def token_required(f):
             return jsonify({'message' : 'Token is missing!'}), 401
         
         try:
-            data = jwt.decode(token, KEY)
+            data = jwt.decode(token, KEY, algorithms='HS256')
             current_user = User.query.filter_by(public_id=data['public_id']).first()
         except:
             return jsonify({'message' : 'Token is invalid!'}), 401
@@ -36,12 +36,10 @@ def log_in():
         return make_response('Could not verify.', 401)
 
     user = User.query.filter_by(nickname=auth.username).first()
-
     if not user:
         return make_response('Could not verify.', 401)
-    
     if check_password_hash(user.password, auth.password):
-        token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, KEY)
+        token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, KEY, algorithm='HS256')
 
         return jsonify({'token' : token.decode('UTF-8')})
     

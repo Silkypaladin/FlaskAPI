@@ -36,7 +36,7 @@ def create_new_quiz(current_user):
         except:
             return jsonify({'message' : 'Could not add quiz.'})
         return jsonify({'message': 'New quiz added.'})
-    return jsonify({'message' : 'Quiz already exists!'})
+    return jsonify({'message' : 'Could not add quiz.'})
 
 @quiz.route('/api/quizzes/<quiz_id>', methods=['GET'])
 @token_required

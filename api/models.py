@@ -26,7 +26,7 @@ class Quiz(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.String(50))
   info = db.Column(db.String(200))
-  user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+  user_id = db.Column(db.Integer, db.ForeignKey('users.public_id'), nullable=False)
   questions = db.relationship('Question', cascade="all,delete", backref='quiz', lazy=True)
 
   def __init__(self, title, info, user_id):

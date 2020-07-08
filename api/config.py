@@ -9,7 +9,6 @@ class BaseConf(object):
 
 class DevelopmentConf(BaseConf):
 
-    PORT = 5000
     DEBUG = True
     TESTING = False
     ENV = "development"
@@ -17,15 +16,16 @@ class DevelopmentConf(BaseConf):
 
 class ProductionConf(BaseConf):
 
-    PORT = 8080
+    SERVER_NAME = 'localhost:8080'
     DEBUG = False
     TESTING = False
     ENV = "production"
     APPNAME = "quizProd"
 
 class TestConf(BaseConf):
+
+    SERVER_NAME = 'localhost.localdomain:6000'
     SQLALCHEMY_DATABASE_URI = "sqlite:////" + os.path.join(BASE_DIR, "test_app.db")
-    PORT = 6000
     DEBUG = True
     TESTING = True
     ENV = "testing"
