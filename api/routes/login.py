@@ -8,6 +8,7 @@ import datetime
 from functools import wraps
 
 login = Blueprint('login', __name__)
+blacklist = set()
 
 def token_required(f):
     @wraps(f)
@@ -18,7 +19,8 @@ def token_required(f):
             token = request.headers['x-access-token']
         if not token:
             return jsonify({'message' : 'Token is missing!'}), 401
-        
+        if token in blacklist:
+            return jsonify({'message' : 'Token is expired!'}), 401
         try:
             data = jwt.decode(token, KEY, algorithms='HS256')
             current_user = User.query.filter_by(public_id=data['public_id']).first()
@@ -39,11 +41,24 @@ def log_in():
     if not user:
         return make_response('Could not verify.', 401)
     if check_password_hash(user.password, auth.password):
-        token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, KEY, algorithm='HS256')
+        token = generate_token(user)
 
         return jsonify({'token' : token.decode('UTF-8')})
     
     return make_response('Could not verify.', 401) 
 
 
-    
+@login.route('/api/refresh')
+@token_required
+def refresh_token(current_user):
+    new_token = generate_token(current_user)
+    # blacklist old token (switch to redis db soon)
+    blacklist.add(request.headers['x-access-token'])
+    # print(jwt.decode(request.headers['x-access-token'], KEY, algorithms='HS256'))
+    return jsonify({'token' : new_token.decode('UTF-8')})
+
+
+
+def generate_token(user):
+    token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=6)}, KEY, algorithm='HS256')
+    return token
