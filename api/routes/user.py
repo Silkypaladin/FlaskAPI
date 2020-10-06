@@ -91,3 +91,14 @@ def delete_user(current_user, public_id):
     db.session.commit()
     return jsonify({'message': 'User deleted.'})
 
+@user.route('/api/register', methods=['POST'])
+def register_new_user():
+    data = request.get_json()
+    hashed_pass = generate_password_hash(data['password'], method='sha256')
+    new_user = User(str(uuid.uuid4()), data['email'], hashed_pass, data['nickname'])
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+    except:
+        return jsonify({'message' : 'User already exists!'}), 409
+    return jsonify({'message' : 'User created!'}), 201
