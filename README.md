@@ -23,9 +23,9 @@ The project consists of: **app.py**, serving as a main function, **data.db** (bo
     │   ├── routes
     │   │   ├── login.py
     │   │   ├── question.py
-	│	│   ├── quiz.py
-	│	│   ├── user.py
-	│	├── extensions
+    │ 	│   ├── quiz.py
+    │ 	│   ├── user.py
+    │   ├── extensions
     │   │   ├── database.py
     │   │   ├── helpers.py
     │   ├── __init__.py
